@@ -6,3 +6,5 @@ httpx
 google-genai
 python-dotenv
 pydantic
+svix
+clerk-backend-api
