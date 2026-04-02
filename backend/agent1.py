@@ -4,6 +4,7 @@
 # Supports: English, Hindi, Bengali, Spanish, French, etc.
 
 from langchain_google_genai import ChatGoogleGenerativeAI
+from langchain_core.messages import SystemMessage, HumanMessage, AIMessage
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -59,26 +60,17 @@ class MultilingualChatAgent:
         self.intake_data = None
 
     def chat(self, user_message: str) -> dict:
-        """
-        Single turn of conversation.
-        Returns: {reply, intake_complete, intake_data, is_emergency}
-        """
-        self.messages.append({"role": "user", "content": user_message})
+        self.messages.append(HumanMessage(content=user_message))
+        
+        all_messages = [SystemMessage(content=SYSTEM_PROMPT)] + self.messages
+        response = client.invoke(all_messages)
+        
+        reply = response.content  # LangChain returns string directly
+        self.messages.append(AIMessage(content=reply))
 
-        response = client.messages.create(
-            model="gemini-2.5-flash",
-            max_tokens=1000,
-            system=SYSTEM_PROMPT,
-            messages=self.messages
-        )
-
-        reply = response.content[0].text
-        self.messages.append({"role": "assistant", "content": reply})
-
-        # Check for emergency
+        # ✅ Same indentation level as everything above
         is_emergency = "<EMERGENCY>true</EMERGENCY>" in reply
 
-        # Check if intake is complete
         intake_complete = False
         intake_data = None
         if "<INTAKE_COMPLETE>" in reply and "</INTAKE_COMPLETE>" in reply:
@@ -89,7 +81,6 @@ class MultilingualChatAgent:
             intake_data = json.loads(json_str)
             intake_complete = True
             self.intake_data = intake_data
-            # Clean reply to remove raw JSON block for display
             reply = reply[:reply.index("<INTAKE_COMPLETE>")].strip()
 
         return {
