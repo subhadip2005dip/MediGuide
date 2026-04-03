@@ -1,6 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from src.routes import webhooks
+from src.database.db import init_db
 
 app = FastAPI()
 
@@ -11,6 +12,11 @@ app.add_middleware(
     allow_headers=["*"],
     allow_credentials=True,
 )
+
+@app.on_event("startup")
+async def startup():
+    """Initialize database tables on startup"""
+    await init_db()
 
 app.include_router(webhooks.router, prefix="/webhooks")
 

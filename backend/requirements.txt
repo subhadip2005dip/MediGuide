@@ -8,3 +8,6 @@ python-dotenv
 pydantic
 svix
 clerk-backend-api
+sqlalchemy
+psycopg2-binary
+asyncpg
