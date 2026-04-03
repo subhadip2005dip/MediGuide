@@ -1,8 +1,7 @@
-# ============================================
+
 # AGENT 2: Triage & Assessment Agent (Upgraded)
 # New: Confidence score, escalation path,
-#      age/gender consideration, second opinion
-# ============================================
+# age/gender consideration, second opinion
 
 import json
 from langchain_google_genai import ChatGoogleGenerativeAI

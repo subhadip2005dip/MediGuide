@@ -1,198 +1,191 @@
-
-# MAIN ORCHESTRATOR
-# Runs all 6 agents in the correct sequence
-
-
+# ============================================
+# MAIN ORCHESTRATOR - MediGuide AI Pipeline
+# Runs all 6 agents in correct sequence
+# ============================================
 
 import json
 import sys
 import os
+from dotenv import load_dotenv
 
-# Add agents directory to path
+load_dotenv()
+
+# Add current directory to path
 sys.path.append(os.path.dirname(__file__))
 
+# Import updated agents
 from agent1 import MultilingualChatAgent
 from agent2 import TriageAgent
-from agent3 import DoctorMatchingAgent
+from agent3 import NearestHospitalAgent
 from agent4 import BookingCoordinationAgent
 from agent5 import CostEstimatorAgent
 from agent6 import DocumentGeneratorAgent
 
 
 def print_stage(stage_num: int, title: str):
-    print(f"\n{'='*55}")
-    print(f"  STAGE {stage_num}: {title}")
-    print(f"{'='*55}\n")
-
+    print(f"\n{'='*60}")
+    print(f" STAGE {stage_num}: {title}")
+    print(f"{'='*60}\n")
 
 def collect_tourist_info() -> dict:
-    """Collect basic tourist info before starting agent pipeline."""
-    print("\n" + "="*55)
-    print("  Welcome to MediGuide — Tourist Medical Assistant")
-    print("="*55)
-    print("\nBefore we begin, a few quick details:\n")
+    name = input("Your full name: ").strip() or "Tourist"
+    city = input("Which city are you in?: ").strip() or "Kolkata"
+    phone = input("Phone (optional): ").strip()
+    email = input("Email (optional): ").strip()
+    currency = input("Home currency (USD/EUR/GBP): ").strip().upper() or "USD"
 
-    name = input("Your name: ").strip() or "Tourist"
-    city = input("Which city are you in? (e.g. Kolkata, Mumbai, Delhi): ").strip() or "Kolkata"
-    phone = input("Your phone number (optional): ").strip()
-    email = input("Your email (optional): ").strip()
-    currency = input("Your home currency (USD/EUR/GBP etc.): ").strip().upper() or "USD"
-    insurance = input(
-        "Insurance plan? [1] Standard Tourist  [2] Premium Tourist  [3] None: "
-    ).strip()
+    # ✅ Collect age and gender
+    age_input = input("Your age (optional, improves triage): ").strip()
+    age = int(age_input) if age_input.isdigit() else None
+    gender = input("Gender (male/female/other, optional): ").strip().lower() or None
 
+    print("\nInsurance Plan:")
+    print("1. Standard Tourist  2. Premium Tourist  3. No Insurance")
+    insurance_choice = input("Choice (1/2/3): ").strip()
     insurance_map = {"1": "standard_tourist", "2": "premium_tourist", "3": "no_insurance"}
-    insurance_plan = insurance_map.get(insurance, "no_insurance")
 
     return {
-        "name": name,
-        "city": city,
-        "phone": phone,
-        "email": email,
+        "name": name, "city": city, "phone": phone, "email": email,
         "home_currency": currency,
-        "insurance_plan": insurance_plan,
-        "language_preference": "English"  # Will be updated from Agent 1 output
+        "insurance_plan": insurance_map.get(insurance_choice, "no_insurance"),
+        "language_preference": "English",
+        "age": age,        # ✅ added
+        "gender": gender   # ✅ added
     }
 
 
-def run_pipeline(tourist_info: dict = None, demo_mode: bool = False):
-    """
-    Full MediGuide pipeline.
-    demo_mode=True skips interactive chat and uses sample data.
-    """
+def run_pipeline(demo_mode: bool = False):
 
-    # ── Demo data for testing without interactive input ─────────────────────────
     if demo_mode:
-        print("\n[DEMO MODE — Using sample tourist data]\n")
+        print("\n[DEMO MODE ACTIVATED]")
         tourist_info = {
-            "name": "John Smith",
-            "city": "Kolkata",
-            "phone": "+1-555-123-4567",
-            "email": "john.smith@email.com",
-            "home_currency": "USD",
-            "insurance_plan": "standard_tourist",
-            "language_preference": "English"
+            "name": "John Smith", "city": "Kolkata",
+            "phone": "+91-9876543210", "email": "john.smith@email.com",
+            "home_currency": "USD", "insurance_plan": "standard_tourist",
+            "language_preference": "English",
+            "age": 45, "gender": "male"   # ✅ realistic demo values
         }
         intake_data = {
             "detected_language": "English",
             "original_complaint": "I have fever and headache since yesterday",
             "symptoms": ["fever", "headache", "body ache"],
-            "duration": "1 day",
-            "severity_self_reported": "moderate",
-            "allergies": "penicillin",
-            "existing_conditions": "none",
-            "medications": "paracetamol",
-            "tourist_name": "John Smith",
-            "ready_for_triage": True
+            "duration": "1 day", "severity_self_reported": "moderate",
+            "allergies": "penicillin", "existing_conditions": "none",
+            "medications": "paracetamol", "tourist_name": "John Smith"
         }
+        # ✅ Show all stages even in demo
+        print_stage(1, "Symptom Intake [DEMO - using sample data]")
+        print(f"  Complaint : {intake_data['original_complaint']}")
+        print(f"  Symptoms  : {', '.join(intake_data['symptoms'])}")
+
     else:
-        # ── STAGE 1: Multilingual Chat Agent ────────────────────────────────────
-        print_stage(1, "Symptom Intake (Multilingual Chat Agent)")
+        tourist_info = collect_tourist_info()
+        print_stage(1, "Multilingual Symptom Intake")
         chat_agent = MultilingualChatAgent()
         intake_data = chat_agent.run_interactive()
 
-        if intake_data.get("emergency"):
-            print("\n🚨 Emergency protocol activated. Please call 112 immediately.")
+        if isinstance(intake_data, dict) and intake_data.get("emergency"):
+            print("\n🚨 EMERGENCY — Call 112 immediately!")
             return
 
-        # Update language preference from detected language
-        tourist_info["language_preference"] = intake_data.get("detected_language", "English")
+        if intake_data.get("detected_language"):
+            tourist_info["language_preference"] = intake_data["detected_language"]
         if intake_data.get("tourist_name"):
             tourist_info["name"] = intake_data["tourist_name"]
 
-    # ── STAGE 2: Triage & Assessment Agent ─────────────────────────────────────
-    print_stage(2, "Triage & Assessment Agent")
+    # STAGE 2: Triage — use age/gender from tourist_info
+    print_stage(2, "Triage & Severity Assessment")
     triage_agent = TriageAgent()
-    triage_result = triage_agent.assess(intake_data)
+    triage_result = triage_agent.assess(
+        intake_data,
+        age=tourist_info.get("age"),       # ✅ dynamic
+        gender=tourist_info.get("gender")  # ✅ dynamic
+    )
     triage_agent.print_summary(triage_result)
 
-    # Handle true emergency
     if triage_result["severity_score"] >= 10:
-        print("\n🚨 CRITICAL: Please go to the nearest Emergency Room immediately!")
-        print("   Call 112 (India Emergency) or ask hotel staff for help.")
+        print("\n🚨 CRITICAL EMERGENCY — Go to nearest ER immediately!")
         return
 
-    # ── STAGE 3: Doctor Matching Agent ─────────────────────────────────────────
-    print_stage(3, "Doctor Matching Agent")
-    matching_agent = DoctorMatchingAgent()
-    matched_provider = matching_agent.match(triage_result, tourist_info)
-    print(f"\n✅ Best Match: {matched_provider.get('provider_name')} "
-          f"@ {matched_provider.get('clinic_name')}")
-    print(f"   📅 Slot: {matched_provider.get('slot_date')} "
-          f"at {matched_provider.get('slot_time')}")
+    # STAGE 3: Hospital finder
+    print_stage(3, "Finding Nearest Hospital")
+    hospital_agent = NearestHospitalAgent()
+    hospital_result = hospital_agent.find(
+        triage_result=triage_result,
+        tourist_info=tourist_info,
+        user_lat=22.5726,
+        user_lon=88.3639,
+        radius_km=10.0
+    )
+    print(f"  ✅ Best match: {hospital_result.get('hospital_name')}")
+    print(f"  📍 Distance : {hospital_result.get('distance_km')} km")
 
-    # ── STAGE 4: Booking & Coordination Agent ──────────────────────────────────
-    print_stage(4, "Booking & Coordination Agent")
+    # ✅ Issue 1 Fix — bridge hospital result to booking format
+    matched_provider = {
+        "provider_id": hospital_result.get("id", "hosp-001"),
+        "provider_name": hospital_result.get("hospital_name"),
+        "clinic_name": hospital_result.get("hospital_name"),
+        "address": hospital_result.get("address"),
+        "phone": hospital_result.get("phone"),
+        "slot_id": f"slot-{hospital_result.get('id', 'auto')}",
+        "slot_date": "2025-08-05",   # In production: fetch real slots
+        "slot_time": "09:00 AM"
+    }
+
+    # STAGE 4: Booking
+    print_stage(4, "Booking & Coordination")
     booking_agent = BookingCoordinationAgent()
-    booking_confirmation = booking_agent.book(matched_provider, triage_result, tourist_info)
-    print(f"\n✅ Booking ID: {booking_confirmation.get('booking_id')}")
-    print(f"   Status: {booking_confirmation.get('status', '').upper()}")
+    booking_confirmation = booking_agent.book(
+        matched_provider,    # ✅ correct shape now
+        triage_result,
+        tourist_info
+    )
 
-    # ── STAGE 5: Cost Estimator Agent ──────────────────────────────────────────
-    print_stage(5, "Cost Estimator Agent")
+    # STAGE 5: Cost
+    print_stage(5, "Cost Estimation")
     cost_agent = CostEstimatorAgent()
     cost_estimate = cost_agent.estimate(triage_result, matched_provider, tourist_info)
-    print(f"\n💰 Estimated Total: ₹{cost_estimate.get('cost_breakdown_inr', {}).get('total_estimated', 'N/A')}")
-    print(f"   Insurance Covers: ₹{cost_estimate.get('insurance', {}).get('covered_inr', 0)}")
-    print(f"   Your Out-of-Pocket: ₹{cost_estimate.get('insurance', {}).get('out_of_pocket_inr', 'N/A')}")
 
-    # ── STAGE 6: Document Generator Agent ─────────────────────────────────────
-    print_stage(6, "Document Generator Agent")
+    # STAGE 6: Documents
+    print_stage(6, "Medical Document Generation")
     doc_agent = DocumentGeneratorAgent()
     documents = doc_agent.generate(
-        intake_data, triage_result, booking_confirmation,
-        cost_estimate, tourist_info
+        intake_data=intake_data,
+        triage_result=triage_result,
+        booking_confirmation=booking_confirmation,
+        cost_estimate=cost_estimate,
+        tourist_info=tourist_info
     )
-    print(f"\n✅ Documents Generated: {', '.join(documents.get('documents_generated', []))}")
 
-    # ── FINAL SUMMARY ──────────────────────────────────────────────────────────
-    print("\n" + "="*55)
-    print("  🏥 MEDIGUIDE — COMPLETE SUMMARY")
-    print("="*55)
-    print(f"\n  Patient     : {tourist_info['name']}")
-    print(f"  Doctor      : {booking_confirmation.get('doctor', matched_provider.get('provider_name'))}")
-    print(f"  Clinic      : {booking_confirmation.get('clinic', matched_provider.get('clinic_name'))}")
-    print(f"  Address     : {booking_confirmation.get('address', matched_provider.get('address'))}")
-    print(f"  Date & Time : {booking_confirmation.get('appointment_date')} "
-          f"at {booking_confirmation.get('appointment_time')}")
-    print(f"  Booking ID  : {booking_confirmation.get('booking_id')}")
-    print(f"  Est. Cost   : ₹{cost_estimate.get('cost_breakdown_inr', {}).get('total_estimated', 'N/A')}")
+    # Final summary
+    print("\n" + "="*70)
+    print("  🎉 MEDIGUIDE PIPELINE COMPLETED")
+    print("="*70)
+    print(f"  Patient      : {tourist_info['name']}")
+    print(f"  Hospital     : {hospital_result.get('hospital_name')}")
+    print(f"  Booking ID   : {booking_confirmation.get('booking_id')}")
+    print(f"  Severity     : {triage_result['severity_score']}/10")
+    print(f"  Est. Cost    : ₹{cost_estimate.get('cost_breakdown_inr', {}).get('total_estimated', 'N/A')}")
+    print(f"  Payment Link : {cost_estimate.get('payment', {}).get('payment_url', 'N/A')}")
+    print("="*70)
 
-    if booking_confirmation.get("confirmation_message"):
-        print(f"\n  💬 {booking_confirmation['confirmation_message']}")
-
-    print("\n" + "="*55)
-
-    # Print documents
-    if documents.get("medical_summary_text"):
-        print("\n📄 MEDICAL SUMMARY FOR DOCTOR:")
-        print(documents["medical_summary_text"])
-
-    if documents.get("claim_letter_text"):
-        print("\n📋 INSURANCE CLAIM LETTER:")
-        print(documents["claim_letter_text"])
-
-    # Return full pipeline output for integration use
     return {
         "tourist_info": tourist_info,
         "intake_data": intake_data,
         "triage_result": triage_result,
-        "matched_provider": matched_provider,
+        "hospital_result": hospital_result,
         "booking_confirmation": booking_confirmation,
         "cost_estimate": cost_estimate,
         "documents": documents
     }
 
 
-# ── Entry point ──────────────────────────────────────────────────────────────────
+# ── Entry Point ─────────────────────────────────────────────────────────────
 if __name__ == "__main__":
     import argparse
-    parser = argparse.ArgumentParser(description="MediGuide — Tourist Medical Assistant")
+
+    parser = argparse.ArgumentParser(description="MediGuide AI - Tourist Medical Assistant")
     parser.add_argument("--demo", action="store_true", help="Run in demo mode with sample data")
     args = parser.parse_args()
 
-    if args.demo:
-        result = run_pipeline(demo_mode=True)
-    else:
-        tourist_info = collect_tourist_info()
-        result = run_pipeline(tourist_info=tourist_info, demo_mode=False)
+    run_pipeline(demo_mode=args.demo)
