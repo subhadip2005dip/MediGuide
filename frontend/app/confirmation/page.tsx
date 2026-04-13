@@ -35,7 +35,9 @@ export default function ConfirmationPage() {
       const response = await generateFamilyReport(parseInt(bookingId));
       setFamilyReport(response.family_report_text);
     } catch (err) {
-      setReportError(err instanceof Error ? err.message : "Failed to generate report");
+      setReportError(
+        err instanceof Error ? err.message : "Failed to generate report",
+      );
     } finally {
       setLoadingReport(false);
     }
@@ -58,12 +60,12 @@ export default function ConfirmationPage() {
 
   if (!booking) {
     return (
-      <div style={{ minHeight: "100vh", padding: "2rem", background: "var(--background)" }}>
-        <div style={{ maxWidth: "600px", margin: "0 auto", textAlign: "center" }}>
-          <h1 style={{ fontSize: "2rem", marginBottom: "1rem", color: "var(--foreground)" }}>
+      <div className="min-h-screen bg-background px-4 py-8">
+        <div className="mx-auto max-w-md text-center">
+          <h1 className="mb-3 text-3xl font-bold text-foreground">
             No Booking Found
           </h1>
-          <p style={{ color: "var(--foreground-dim)", marginBottom: "2rem" }}>
+          <p className="mb-6 text-foreground-dim">
             Please complete a booking first.
           </p>
           <Link href="/triage" className="btn-primary">
@@ -87,113 +89,63 @@ export default function ConfirmationPage() {
   });
 
   return (
-    <div style={{ minHeight: "100vh", padding: "2rem", background: "var(--background)" }}>
-      <div style={{ maxWidth: "900px", margin: "0 auto" }}>
-        <div
-          style={{
-            textAlign: "center",
-            marginBottom: "3rem",
-            paddingBottom: "2rem",
-            borderBottom: "1px solid var(--border)",
-          }}
-        >
-          <div
-            style={{
-              fontSize: "3rem",
-              marginBottom: "1rem",
-            }}
-          >
-            ✅
-          </div>
-          <h1
-            style={{
-              fontSize: "2.5rem",
-              marginBottom: "0.5rem",
-              color: "var(--primary)",
-              fontFamily: "var(--font-bebas)",
-              letterSpacing: "0.05em",
-            }}
-          >
+    <div className="min-h-screen bg-background px-4 py-8">
+      <div className="mx-auto max-w-4xl">
+        {/* Header */}
+        <div className="mb-12 border-b border-border pb-8 text-center">
+          <div className="mb-4 text-5xl">✅</div>
+          <h1 className="mb-2 font-bebas text-4xl tracking-wide text-primary">
             Booking Confirmed
           </h1>
-          <p style={{ fontSize: "1.1rem", color: "var(--foreground-dim)" }}>
+          <p className="text-lg text-foreground-dim">
             Your appointment has been successfully scheduled
           </p>
         </div>
 
-        <div className="card" style={{ padding: "2rem", marginBottom: "2rem", background: "var(--card)", border: "1px solid var(--border)" }}>
-          <h2
-            style={{
-              fontSize: "1.5rem",
-              marginBottom: "1.5rem",
-              color: "var(--foreground)",
-              fontFamily: "var(--font-bebas)",
-              letterSpacing: "0.05em",
-            }}
-          >
+        {/* Appointment Details Card */}
+        <div className="card mb-8 p-8">
+          <h2 className="mb-6 font-bebas text-2xl tracking-wide text-foreground">
             Appointment Details
           </h2>
 
-          <div style={{ display: "grid", gap: "1.5rem" }}>
+          <div className="space-y-6">
             <div>
-              <div style={{ color: "var(--foreground-dim)", fontSize: "0.85rem", marginBottom: "0.25rem" }}>
-                Patient
-              </div>
-              <div style={{ color: "var(--foreground)", fontSize: "1.1rem", fontWeight: "500" }}>
+              <div className="text-xs text-foreground-dim mb-1">Patient</div>
+              <div className="text-base text-foreground font-medium">
                 {booking.patient_name}
               </div>
             </div>
 
             <div>
-              <div style={{ color: "var(--foreground-dim)", fontSize: "0.85rem", marginBottom: "0.25rem" }}>
-                Hospital
-              </div>
-              <div style={{ color: "var(--foreground)", fontSize: "1.1rem", fontWeight: "500" }}>
+              <div className="text-xs text-foreground-dim mb-1">Hospital</div>
+              <div className="text-base text-foreground font-medium">
                 {booking.hospital_name}
               </div>
-              <div style={{ color: "var(--foreground-dim)", fontSize: "0.9rem", marginTop: "0.25rem" }}>
+              <div className="text-sm text-foreground-dim mt-1">
                 📍 {booking.hospital_address}
               </div>
             </div>
 
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1.5rem" }}>
+            <div className="grid grid-cols-2 gap-6">
               <div>
-                <div style={{ color: "var(--foreground-dim)", fontSize: "0.85rem", marginBottom: "0.25rem" }}>
-                  Date
-                </div>
-                <div style={{ color: "var(--foreground)", fontSize: "1rem" }}>
-                  {formattedDate}
-                </div>
+                <div className="text-xs text-foreground-dim mb-1">Date</div>
+                <div className="text-base text-foreground">{formattedDate}</div>
               </div>
 
               <div>
-                <div style={{ color: "var(--foreground-dim)", fontSize: "0.85rem", marginBottom: "0.25rem" }}>
-                  Time
-                </div>
-                <div style={{ color: "var(--foreground)", fontSize: "1rem" }}>
-                  {formattedTime}
-                </div>
+                <div className="text-xs text-foreground-dim mb-1">Time</div>
+                <div className="text-base text-foreground">{formattedTime}</div>
               </div>
             </div>
 
             {booking.ambulance_requested && (
-              <div
-                style={{
-                  padding: "1rem",
-                  background: "rgba(239,68,68,0.1)",
-                  border: "1px solid rgba(239,68,68,0.3)",
-                  borderRadius: "8px",
-                  display: "flex",
-                  alignItems: "center",
-                  gap: "0.75rem",
-                }}
-              >
-                <span style={{ fontSize: "1.5rem" }}>🚨</span>
+              <div className="p-4 bg-destructive/10 border border-destructive/30 rounded-lg flex items-center gap-3">
+                <span className="text-2xl">🚨</span>
                 <div>
-                  <div style={{ color: "#ef4444", fontWeight: "600", marginBottom: "0.25rem" }}>
+                  <div className="text-destructive font-semibold mb-1">
                     Ambulance Requested
                   </div>
-                  <div style={{ color: "var(--foreground-dim)", fontSize: "0.85rem" }}>
+                  <div className="text-xs text-foreground-dim">
                     Emergency transportation has been dispatched
                   </div>
                 </div>
@@ -201,35 +153,22 @@ export default function ConfirmationPage() {
             )}
 
             <div>
-              <div style={{ color: "var(--foreground-dim)", fontSize: "0.85rem", marginBottom: "0.25rem" }}>
+              <div className="text-xs text-foreground-dim mb-1">
                 Estimated Cost
               </div>
-              <div style={{ color: "var(--primary)", fontSize: "1.5rem", fontWeight: "600" }}>
+              <div className="text-2xl text-primary font-semibold">
                 ${booking.estimated_cost_usd} USD
               </div>
-              <div style={{ color: "var(--foreground-muted)", fontSize: "0.8rem", marginTop: "0.25rem" }}>
+              <div className="text-xs text-foreground-muted mt-1">
                 This is an estimate. Actual costs may vary based on treatment.
               </div>
             </div>
 
             <div>
-              <div style={{ color: "var(--foreground-dim)", fontSize: "0.85rem", marginBottom: "0.5rem" }}>
+              <div className="text-xs text-foreground-dim mb-2">
                 Booking Status
               </div>
-              <div
-                style={{
-                  display: "inline-block",
-                  padding: "0.5rem 1rem",
-                  background: "rgba(0,212,168,0.15)",
-                  border: "1px solid rgba(0,212,168,0.3)",
-                  borderRadius: "6px",
-                  color: "var(--primary)",
-                  fontSize: "0.9rem",
-                  fontWeight: "600",
-                  textTransform: "uppercase",
-                  letterSpacing: "0.05em",
-                }}
-              >
+              <div className="inline-block px-4 py-2 bg-primary/15 border border-primary/30 rounded text-sm text-primary font-semibold uppercase tracking-wider">
                 {booking.status}
               </div>
             </div>
@@ -237,34 +176,18 @@ export default function ConfirmationPage() {
         </div>
 
         {!familyReport ? (
-          <div className="card" style={{ padding: "2rem", marginBottom: "2rem", background: "var(--card)", border: "1px solid var(--border)" }}>
-            <h2
-              style={{
-                fontSize: "1.5rem",
-                marginBottom: "1rem",
-                color: "var(--foreground)",
-                fontFamily: "var(--font-bebas)",
-                letterSpacing: "0.05em",
-              }}
-            >
+          <div className="card mb-8 p-8">
+            <h2 className="text-2xl text-foreground font-bebas mb-4 tracking-wide">
               Family Report
             </h2>
-            <p style={{ color: "var(--foreground-dim)", marginBottom: "1.5rem", lineHeight: "1.6" }}>
-              Generate a plain-language medical summary to share with your family members.
-              This report explains the situation in simple terms they can understand.
+            <p className="text-foreground-dim mb-6 leading-relaxed">
+              Generate a plain-language medical summary to share with your
+              family members. This report explains the situation in simple terms
+              they can understand.
             </p>
 
             {reportError && (
-              <div
-                style={{
-                  marginBottom: "1.5rem",
-                  padding: "1rem",
-                  background: "rgba(239,68,68,0.1)",
-                  border: "1px solid rgba(239,68,68,0.3)",
-                  borderRadius: "8px",
-                  color: "#ef4444",
-                }}
-              >
+              <div className="mb-6 p-4 bg-destructive/10 border border-destructive/30 rounded-lg text-destructive">
                 {reportError}
               </div>
             )}
@@ -274,76 +197,40 @@ export default function ConfirmationPage() {
               disabled={loadingReport}
               className="btn-primary"
               style={{
-                padding: "0.875rem 2rem",
-                fontSize: "1rem",
                 opacity: loadingReport ? 0.6 : 1,
                 cursor: loadingReport ? "not-allowed" : "pointer",
               }}
             >
-              {loadingReport ? "Generating Report..." : "Generate Family Report"}
+              {loadingReport
+                ? "Generating Report..."
+                : "Generate Family Report"}
             </button>
           </div>
         ) : (
-          <div className="card" style={{ padding: "2rem", marginBottom: "2rem", background: "var(--card)", border: "1px solid var(--border)" }}>
-            <h2
-              style={{
-                fontSize: "1.5rem",
-                marginBottom: "1.5rem",
-                color: "var(--foreground)",
-                fontFamily: "var(--font-bebas)",
-                letterSpacing: "0.05em",
-              }}
-            >
+          <div className="card mb-8 p-8">
+            <h2 className="text-2xl text-foreground font-bebas mb-6 tracking-wide">
               Family Report
             </h2>
 
-            <div
-              style={{
-                padding: "1.5rem",
-                background: "var(--surface)",
-                border: "1px solid var(--border)",
-                borderRadius: "8px",
-                marginBottom: "1.5rem",
-                whiteSpace: "pre-wrap",
-                lineHeight: "1.8",
-                color: "var(--foreground)",
-                fontSize: "0.95rem",
-              }}
-            >
+            <div className="p-6 bg-surface border border-border rounded-lg mb-6 whitespace-pre-wrap leading-relaxed text-foreground text-sm">
               {familyReport}
             </div>
 
-            <div style={{ display: "flex", gap: "1rem", flexWrap: "wrap" }}>
+            <div className="flex gap-4 flex-wrap">
               <button
                 onClick={handleCopyReport}
-                style={{
-                  padding: "0.875rem 1.5rem",
-                  background: copied ? "rgba(0,212,168,0.15)" : "var(--surface)",
-                  border: `1px solid ${copied ? "rgba(0,212,168,0.3)" : "var(--border)"}`,
-                  borderRadius: "8px",
-                  color: copied ? "var(--primary)" : "var(--foreground)",
-                  fontSize: "0.95rem",
-                  cursor: "pointer",
-                  transition: "all 0.2s",
-                  fontWeight: "500",
-                }}
+                className={`px-6 py-2 rounded-lg text-sm font-medium transition-all cursor-pointer ${
+                  copied
+                    ? "bg-primary/15 border border-primary/30 text-primary"
+                    : "bg-surface border border-border text-foreground"
+                }`}
               >
                 {copied ? "✓ Copied!" : "📋 Copy to Clipboard"}
               </button>
 
               <button
                 onClick={handleWhatsAppShare}
-                style={{
-                  padding: "0.875rem 1.5rem",
-                  background: "#25D366",
-                  border: "1px solid #1da851",
-                  borderRadius: "8px",
-                  color: "#fff",
-                  fontSize: "0.95rem",
-                  cursor: "pointer",
-                  fontWeight: "500",
-                  transition: "all 0.2s",
-                }}
+                className="px-6 py-2 bg-[#25D366] border border-[#1da851] rounded-lg text-white text-sm font-medium transition-all cursor-pointer"
               >
                 📱 Share via WhatsApp
               </button>
@@ -351,22 +238,10 @@ export default function ConfirmationPage() {
           </div>
         )}
 
-        <div style={{ textAlign: "center" }}>
+        <div className="text-center">
           <Link
             href="/"
-            className="btn-secondary"
-            style={{
-              display: "inline-block",
-              padding: "0.875rem 2rem",
-              background: "var(--surface)",
-              border: "1px solid var(--border)",
-              borderRadius: "8px",
-              color: "var(--foreground)",
-              textDecoration: "none",
-              fontSize: "1rem",
-              fontWeight: "500",
-              transition: "all 0.2s",
-            }}
+            className="btn-secondary inline-block px-8 py-3 bg-surface border border-border rounded-lg text-foreground text-base font-medium transition-all"
           >
             ← Back to Home
           </Link>

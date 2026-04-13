@@ -3,6 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from src.routes import webhooks
 from src.routes import triage
 from src.routes import bookings
+from src.routes import translate
 from src.database.db import init_db
 
 app = FastAPI()
@@ -22,7 +23,8 @@ async def startup():
 
 app.include_router(webhooks.router, prefix="/webhooks")
 app.include_router(triage.router, prefix="/triage")
-app.include_router(bookings.router)
+app.include_router(bookings.router, prefix="/bookings")
+app.include_router(translate.router, prefix="/translate")
 
 @app.get("/health")
 async def health_check():

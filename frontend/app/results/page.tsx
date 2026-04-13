@@ -40,12 +40,10 @@ const SEVERITY_CONFIG: Record<
 
 function StarRating({ rating }: { rating: number }) {
   return (
-    <span style={{ color: "#f59e0b", fontSize: "0.8rem" }}>
+    <span className="text-yellow-500 text-xs">
       {"★".repeat(Math.round(rating))}
       {"☆".repeat(5 - Math.round(rating))}
-      <span style={{ color: "var(--foreground-muted)", marginLeft: "0.25rem" }}>
-        {rating.toFixed(1)}
-      </span>
+      <span className="text-foreground-muted ml-1">{rating.toFixed(1)}</span>
     </span>
   );
 }
@@ -69,122 +67,53 @@ function HospitalCard({
 
   return (
     <div
-      className="card card-hover"
-      style={{
-        padding: "1.5rem",
-        border: isFirst
-          ? "1px solid rgba(0,212,168,0.3)"
-          : "1px solid var(--border)",
-        position: "relative",
-        overflow: "hidden",
-      }}
+      className={`card card-hover p-6 ${isFirst ? "border border-primary/30" : "border border-border"} relative overflow-hidden`}
     >
       {isFirst && (
-        <div
-          style={{
-            position: "absolute",
-            top: "1rem",
-            right: "1rem",
-            background: "rgba(0,212,168,0.12)",
-            border: "1px solid rgba(0,212,168,0.25)",
-            color: "var(--primary)",
-            fontSize: "0.7rem",
-            fontWeight: 700,
-            letterSpacing: "0.1em",
-            padding: "0.2rem 0.6rem",
-            borderRadius: "100px",
-          }}
-        >
+        <div className="absolute top-4 right-4 bg-primary/12 border border-primary/25 text-primary text-xs font-bold tracking-widest px-2 py-1 rounded-full">
           BEST MATCH
         </div>
       )}
 
-      <div style={{ display: "flex", alignItems: "flex-start", gap: "1rem" }}>
+      <div className="flex items-start gap-4">
         {/* Rank */}
         <div
-          style={{
-            fontFamily: "var(--font-bebas)",
-            fontSize: "2rem",
-            color: isFirst ? "var(--primary)" : "var(--foreground-muted)",
-            lineHeight: 1,
-            minWidth: "2.5rem",
-          }}
+          className={`font-bebas text-3xl ${isFirst ? "text-primary" : "text-foreground-muted"} leading-none min-w-max`}
         >
           #{rank}
         </div>
 
-        <div style={{ flex: 1 }}>
-          <h3
-            style={{
-              fontSize: "1.05rem",
-              fontWeight: 600,
-              color: "var(--foreground)",
-              marginBottom: "0.25rem",
-            }}
-          >
+        <div className="flex-1">
+          <h3 className="text-base font-semibold text-foreground mb-1">
             {hospital.name}
           </h3>
-          <p
-            style={{
-              color: "var(--foreground-muted)",
-              fontSize: "0.85rem",
-              marginBottom: "0.5rem",
-            }}
-          >
+          <p className="text-foreground-muted text-xs mb-2">
             📍 {hospital.address}
           </p>
 
-          <div
-            style={{
-              display: "flex",
-              flexWrap: "wrap",
-              gap: "0.75rem",
-              marginBottom: "0.75rem",
-              alignItems: "center",
-            }}
-          >
+          <div className="flex flex-wrap gap-3 mb-3 items-center">
             {hospital.rating && <StarRating rating={hospital.rating} />}
-            <span
-              style={{ color: "var(--foreground-dim)", fontSize: "0.85rem" }}
-            >
+            <span className="text-foreground-dim text-xs">
               🗺 {hospital.distance_km} km
             </span>
             {hospital.open_now === true && (
-              <span
-                style={{
-                  color: "#22c55e",
-                  fontSize: "0.8rem",
-                  fontWeight: 600,
-                }}
-              >
+              <span className="text-green-500 text-xs font-semibold">
                 ● Open Now
               </span>
             )}
             {hospital.open_now === false && (
-              <span style={{ color: "#ef4444", fontSize: "0.8rem" }}>
-                ● Closed
-              </span>
+              <span className="text-destructive text-xs">● Closed</span>
             )}
           </div>
 
-          <p
-            style={{
-              fontSize: "0.8rem",
-              color: "var(--foreground-muted)",
-              background: "var(--surface)",
-              borderRadius: "6px",
-              padding: "0.4rem 0.75rem",
-              marginBottom: "1rem",
-            }}
-          >
+          <p className="text-xs text-foreground-muted bg-surface rounded px-3 py-1 mb-4">
             {hospital.match_reason}
           </p>
 
-          <div style={{ display: "flex", gap: "0.75rem", flexWrap: "wrap" }}>
+          <div className="flex gap-3 flex-wrap">
             <button
               onClick={handleBook}
-              className="btn-primary"
-              style={{ padding: "0.6rem 1.25rem", fontSize: "0.9rem" }}
+              className="btn-primary py-1.5 px-5 text-sm"
             >
               Book Appointment →
             </button>
@@ -193,19 +122,13 @@ function HospitalCard({
               target="_blank"
               rel="noopener noreferrer"
             >
-              <button
-                className="btn-ghost"
-                style={{ padding: "0.6rem 1rem", fontSize: "0.85rem" }}
-              >
+              <button className="btn-ghost py-1.5 px-4 text-xs">
                 View on Maps ↗
               </button>
             </a>
             {hospital.phone && (
               <a href={`tel:${hospital.phone}`}>
-                <button
-                  className="btn-ghost"
-                  style={{ padding: "0.6rem 1rem", fontSize: "0.85rem" }}
-                >
+                <button className="btn-ghost py-1.5 px-4 text-xs">
                   📞 Call
                 </button>
               </a>
@@ -229,26 +152,15 @@ export default function ResultsPage() {
 
   if (!result) {
     return (
-      <div
-        style={{
-          minHeight: "calc(100vh - 64px)",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          flexDirection: "column",
-          gap: "1rem",
-        }}
-      >
+      <div className="min-h-[calc(100vh-64px)] flex items-center justify-center flex-col gap-4">
         <div
           className="spinner"
           style={{ width: 36, height: 36, borderWidth: 3 }}
         />
-        <p style={{ color: "var(--foreground-muted)" }}>Loading results...</p>
+        <p className="text-foreground-muted">Loading results...</p>
         {mounted && (
           <Link href="/triage">
-            <button className="btn-ghost" style={{ marginTop: "1rem" }}>
-              ← Start New Assessment
-            </button>
+            <button className="btn-ghost mt-4">← Start New Assessment</button>
           </Link>
         )}
       </div>
@@ -259,64 +171,35 @@ export default function ResultsPage() {
   const isEmergency = result.severity === "emergency";
 
   return (
-    <div
-      style={{
-        minHeight: "calc(100vh - 64px)",
-        background: "var(--background)",
-        padding: "2.5rem 1.5rem",
-      }}
-    >
-      <div style={{ maxWidth: "760px", margin: "0 auto" }}>
+    <div className="min-h-[calc(100vh-64px)] bg-background px-6 py-10">
+      <div className="mx-auto max-w-2xl">
         <div
-          className={`${mounted ? "fade-up" : ""} ${isEmergency ? "pulse-emergency" : ""}`}
+          className={`${mounted ? "fade-up" : ""} ${isEmergency ? "pulse-emergency" : ""} rounded-2xl p-6 mb-6`}
           style={{
             background: sev.bg,
             border: `1px solid ${sev.border}`,
-            borderRadius: "12px",
-            padding: "1.5rem",
-            marginBottom: "1.5rem",
           }}
         >
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: "1rem",
-              marginBottom: "0.75rem",
-            }}
-          >
+          <div className="flex items-center gap-4 mb-3">
             <div
-              style={{
-                fontFamily: "var(--font-bebas)",
-                fontSize: "3.5rem",
-                color: sev.color,
-                lineHeight: 1,
-              }}
+              className="font-bebas text-5xl leading-none"
+              style={{ color: sev.color }}
             >
               {result.severity_score}
             </div>
             <div>
-              <div
-                style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}
-              >
+              <div className="flex items-center gap-2">
                 <span
-                  style={{
-                    color: sev.color,
-                    fontWeight: 700,
-                    fontSize: "0.8rem",
-                    letterSpacing: "0.12em",
-                  }}
+                  className="font-bold text-xs tracking-widest"
+                  style={{ color: sev.color }}
                 >
                   SEVERITY — {sev.label}
                 </span>
-                {isEmergency && <span style={{ fontSize: "1.2rem" }}>🚨</span>}
+                {isEmergency && <span className="text-xl">🚨</span>}
               </div>
               <p
-                style={{
-                  color: "var(--foreground-dim)",
-                  fontSize: "0.9rem",
-                  marginTop: "0.25rem",
-                }}
+                className="text-sm mt-1"
+                style={{ color: "var(--foreground-dim)" }}
               >
                 {result.escalation_message}
               </p>
@@ -326,11 +209,9 @@ export default function ResultsPage() {
           {isEmergency && (
             <a href="tel:112">
               <button
-                className="btn-primary"
+                className="btn-primary text-lg py-2 px-8"
                 style={{
                   background: "#ef4444",
-                  fontSize: "1.05rem",
-                  padding: "0.875rem 2rem",
                 }}
               >
                 📞 Call Emergency — 112
@@ -339,146 +220,53 @@ export default function ResultsPage() {
           )}
         </div>
 
-        <div
-          className={`card ${mounted ? "fade-up-delay-1" : ""}`}
-          style={{ padding: "1.5rem", marginBottom: "1.5rem" }}
-        >
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "flex-start",
-              marginBottom: "1rem",
-              flexWrap: "wrap",
-              gap: "0.5rem",
-            }}
-          >
-            <h2
-              style={{
-                fontSize: "1rem",
-                fontWeight: 600,
-                color: "var(--foreground)",
-              }}
-            >
+        <div className={`card ${mounted ? "fade-up-delay-1" : ""} p-6 mb-6`}>
+          <div className="flex justify-between items-start mb-4 flex-wrap gap-2">
+            <h2 className="text-base font-semibold text-foreground">
               AI Assessment
             </h2>
-            <div style={{ display: "flex", gap: "0.5rem", flexWrap: "wrap" }}>
-              <span
-                style={{
-                  background: "rgba(0,212,168,0.08)",
-                  border: "1px solid rgba(0,212,168,0.2)",
-                  color: "var(--primary)",
-                  fontSize: "0.75rem",
-                  padding: "0.2rem 0.6rem",
-                  borderRadius: "100px",
-                  fontWeight: 600,
-                }}
-              >
+            <div className="flex gap-2 flex-wrap">
+              <span className="bg-primary/8 border border-primary/20 text-primary text-xs px-2 py-1 rounded-full font-semibold">
                 {result.recommended_specialty}
               </span>
-              <span
-                style={{
-                  background: "var(--surface)",
-                  border: "1px solid var(--border)",
-                  color: "var(--foreground-dim)",
-                  fontSize: "0.75rem",
-                  padding: "0.2rem 0.6rem",
-                  borderRadius: "100px",
-                }}
-              >
+              <span className="bg-surface border border-border text-foreground-dim text-xs px-2 py-1 rounded-full">
                 {result.estimated_visit_type}
               </span>
             </div>
           </div>
 
-          <p
-            style={{
-              color: "var(--foreground)",
-              lineHeight: 1.7,
-              marginBottom: "1rem",
-            }}
-          >
+          <p className="text-foreground leading-relaxed mb-4">
             {result.ai_summary}
           </p>
 
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: "0.75rem",
-              marginBottom: "1rem",
-            }}
-          >
-            <span
-              style={{
-                fontSize: "0.8rem",
-                color: "var(--foreground-muted)",
-                whiteSpace: "nowrap",
-              }}
-            >
+          <div className="flex items-center gap-3 mb-4">
+            <span className="text-xs text-foreground-muted whitespace-nowrap">
               Confidence
             </span>
-            <div
-              style={{
-                flex: 1,
-                height: 6,
-                background: "var(--border)",
-                borderRadius: 3,
-              }}
-            >
+            <div className="flex-1 h-1.5 bg-border rounded-full overflow-hidden">
               <div
+                className="h-full rounded-full transition-all duration-1000"
                 style={{
-                  height: "100%",
-                  borderRadius: 3,
                   width: `${result.confidence_score * 100}%`,
                   background:
                     result.confidence_score > 0.7
                       ? "var(--primary)"
                       : "#f59e0b",
-                  transition: "width 1s ease",
                 }}
               />
             </div>
-            <span
-              style={{
-                fontSize: "0.8rem",
-                color: "var(--primary)",
-                fontWeight: 600,
-                whiteSpace: "nowrap",
-              }}
-            >
+            <span className="text-xs text-primary font-semibold whitespace-nowrap">
               {Math.round(result.confidence_score * 100)}%
             </span>
           </div>
 
           {result.red_flags.length > 0 && (
-            <div
-              style={{
-                background: "rgba(239,68,68,0.07)",
-                border: "1px solid rgba(239,68,68,0.2)",
-                borderRadius: "8px",
-                padding: "0.875rem",
-              }}
-            >
-              <p
-                style={{
-                  color: "#ef4444",
-                  fontSize: "0.8rem",
-                  fontWeight: 700,
-                  letterSpacing: "0.08em",
-                  marginBottom: "0.5rem",
-                }}
-              >
+            <div className="bg-destructive/7 border border-destructive/20 rounded-lg p-3.5">
+              <p className="text-destructive text-xs font-bold tracking-wider mb-2">
                 ⚠ RED FLAGS DETECTED
               </p>
               {result.red_flags.map((flag) => (
-                <p
-                  key={flag}
-                  style={{
-                    color: "var(--foreground-dim)",
-                    fontSize: "0.85rem",
-                  }}
-                >
+                <p key={flag} className="text-foreground-dim text-xs">
                   • {flag}
                 </p>
               ))}
@@ -486,34 +274,12 @@ export default function ResultsPage() {
           )}
         </div>
 
-        <div
-          className={`card ${mounted ? "fade-up-delay-2" : ""}`}
-          style={{ padding: "1.5rem", marginBottom: "1.5rem" }}
-        >
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
-              marginBottom: "0.75rem",
-            }}
-          >
-            <h2
-              style={{
-                fontSize: "1rem",
-                fontWeight: 600,
-                color: "var(--foreground)",
-              }}
-            >
+        <div className={`card ${mounted ? "fade-up-delay-2" : ""} p-6 mb-6`}>
+          <div className="flex justify-between items-center mb-3">
+            <h2 className="text-base font-semibold text-foreground">
               Doctor Card
-              <span
-                style={{
-                  color: "var(--foreground-muted)",
-                  fontWeight: 400,
-                  fontSize: "0.85rem",
-                  marginLeft: "0.5rem",
-                }}
-              >
+              <span className="text-foreground-muted font-normal text-xs ml-2">
+                {" "}
                 — show this to your doctor
               </span>
             </h2>
@@ -521,30 +287,12 @@ export default function ResultsPage() {
               onClick={() =>
                 navigator.clipboard?.writeText(result.symptom_card)
               }
-              style={{
-                background: "transparent",
-                border: "1px solid var(--border)",
-                color: "var(--foreground-muted)",
-                padding: "0.25rem 0.75rem",
-                borderRadius: "6px",
-                cursor: "pointer",
-                fontSize: "0.8rem",
-              }}
+              className="border border-border text-foreground-muted px-3 py-0.5 rounded text-xs cursor-pointer hover:bg-surface transition-colors"
             >
               Copy
             </button>
           </div>
-          <div
-            style={{
-              background: "var(--surface)",
-              borderRadius: "8px",
-              padding: "1rem",
-              color: "var(--foreground)",
-              lineHeight: 1.7,
-              fontSize: "0.95rem",
-              borderLeft: "3px solid var(--primary)",
-            }}
-          >
+          <div className="bg-surface rounded-lg p-4 text-foreground leading-relaxed text-sm border-l-4 border-primary">
             {result.symptom_card}
           </div>
         </div>
@@ -552,62 +300,21 @@ export default function ResultsPage() {
         {/* Pharmacy Option for Low Severity */}
         {result.severity === "low" && (
           <div
-            className={`card ${mounted ? "fade-up-delay-2" : ""}`}
-            style={{
-              padding: "1.5rem",
-              marginBottom: "1.5rem",
-              background: "rgba(34,197,94,0.05)",
-              border: "1px solid rgba(34,197,94,0.2)",
-            }}
+            className={`card ${mounted ? "fade-up-delay-2" : ""} p-6 mb-6 bg-green-500/5 border border-green-500/20`}
           >
-            <div
-              style={{
-                display: "flex",
-                alignItems: "flex-start",
-                gap: "1rem",
-              }}
-            >
-              <div
-                style={{
-                  fontSize: "2rem",
-                  minWidth: "2.5rem",
-                }}
-              >
-                💊
-              </div>
-              <div style={{ flex: 1 }}>
-                <h3
-                  style={{
-                    fontSize: "1rem",
-                    fontWeight: 600,
-                    color: "var(--foreground)",
-                    marginBottom: "0.5rem",
-                  }}
-                >
+            <div className="flex items-start gap-4">
+              <div className="text-2xl min-w-max">💊</div>
+              <div className="flex-1">
+                <h3 className="text-base font-semibold text-foreground mb-2">
                   No Doctor Visit Needed
                 </h3>
-                <p
-                  style={{
-                    color: "var(--foreground-dim)",
-                    fontSize: "0.9rem",
-                    marginBottom: "1rem",
-                    lineHeight: 1.6,
-                  }}
-                >
+                <p className="text-foreground-dim text-sm mb-4 leading-relaxed">
                   Based on your assessment, you don't need to visit a doctor
                   right now. If you need any over-the-counter medications, you
                   can visit a nearby pharmacy to get what you need.
                 </p>
                 <Link href="/pharmacy">
-                  <button
-                    className="btn-primary"
-                    style={{
-                      background: "#22c55e",
-                      color: "#ffffff",
-                      padding: "0.75rem 1.5rem",
-                      fontSize: "0.9rem",
-                    }}
-                  >
+                  <button className="btn-primary bg-green-500 text-white py-1.5 px-6 text-sm">
                     Find Nearby Pharmacies →
                   </button>
                 </Link>
@@ -617,34 +324,17 @@ export default function ResultsPage() {
         )}
 
         <div className={mounted ? "fade-up-delay-3" : ""}>
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
-              marginBottom: "1rem",
-            }}
-          >
-            <h2
-              style={{
-                fontSize: "1.1rem",
-                fontWeight: 600,
-                color: "var(--foreground)",
-              }}
-            >
+          <div className="flex justify-between items-center mb-4">
+            <h2 className="text-lg font-semibold text-foreground">
               Nearby Hospitals
             </h2>
-            <span
-              style={{ color: "var(--foreground-muted)", fontSize: "0.85rem" }}
-            >
+            <span className="text-foreground-muted text-xs">
               {result.total_hospitals_found} found · showing top{" "}
               {result.hospitals.length}
             </span>
           </div>
 
-          <div
-            style={{ display: "flex", flexDirection: "column", gap: "1rem" }}
-          >
+          <div className="space-y-4">
             {result.hospitals.map((h, i) => (
               <HospitalCard
                 key={h.place_id}
@@ -656,7 +346,7 @@ export default function ResultsPage() {
           </div>
         </div>
 
-        <div style={{ textAlign: "center", marginTop: "2.5rem" }}>
+        <div className="text-center mt-10">
           <Link href="/triage">
             <button className="btn-ghost">← Start New Assessment</button>
           </Link>

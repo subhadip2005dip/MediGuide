@@ -90,75 +90,37 @@ export default function TriagePage() {
   };
 
   return (
-    <div
-      style={{
-        minHeight: "calc(100vh - 64px)",
-        background: "var(--background)",
-        padding: "3rem 1.5rem",
-      }}
-    >
-      <div style={{ maxWidth: "680px", margin: "0 auto" }}>
+    <div className="min-h-[calc(100vh-64px)] bg-background px-4 py-12 md:py-16">
+      <div className="mx-auto max-w-2xl">
         {/* Header */}
-        <div
-          className={mounted ? "fade-up" : ""}
-          style={{ marginBottom: "2.5rem" }}
-        >
-          <p
-            style={{
-              fontSize: "0.75rem",
-              letterSpacing: "0.15em",
-              color: "var(--primary)",
-              textTransform: "uppercase",
-              marginBottom: "0.75rem",
-            }}
-          >
-            STEP 1 OF 3 · SYMPTOM ASSESSMENT
+        <div className={`${mounted ? "fade-up" : ""} mb-12`}>
+          <p className="text-xs font-bold uppercase tracking-widest text-primary mb-3">
+            Step 1 of 3 · Symptom Assessment
           </p>
-          <h1
-            style={{
-              fontFamily: "var(--font-bebas)",
-              fontSize: "clamp(2.5rem, 6vw, 4rem)",
-              letterSpacing: "0.03em",
-              color: "var(--foreground)",
-              lineHeight: 1,
-              marginBottom: "0.75rem",
-            }}
-          >
-            WHAT ARE YOU FEELING?
+          <h1 className="font-bebas text-4xl md:text-6xl tracking-tight text-foreground mb-3">
+            What Are You Feeling?
           </h1>
-          <p style={{ color: "var(--foreground-dim)", fontSize: "1rem" }}>
+          <p className="text-sm md:text-base text-foreground-dim">
             Be as specific as possible — duration, intensity, and location of
             symptoms all help.
           </p>
         </div>
 
         {/* Quick select */}
-        <div
-          className={mounted ? "fade-up-delay-1" : ""}
-          style={{ marginBottom: "1.5rem" }}
-        >
+        <div className={`${mounted ? "fade-up-delay-1" : ""} mb-6`}>
           <span className="label">Quick select</span>
-          <div style={{ display: "flex", flexWrap: "wrap", gap: "0.5rem" }}>
+          <div className="flex flex-wrap gap-2">
             {QUICK_SYMPTOMS.map((s) => (
               <button
                 key={s}
                 onClick={() =>
                   setSymptoms((prev) => (prev ? `${prev}, ${s}` : s))
                 }
-                style={{
-                  background: symptoms.includes(s)
-                    ? "rgba(0,212,168,0.1)"
-                    : "var(--surface)",
-                  border: `1px solid ${symptoms.includes(s) ? "rgba(0,212,168,0.3)" : "var(--border)"}`,
-                  color: symptoms.includes(s)
-                    ? "var(--primary)"
-                    : "var(--foreground-dim)",
-                  borderRadius: "100px",
-                  padding: "0.4rem 1rem",
-                  fontSize: "0.85rem",
-                  cursor: "pointer",
-                  transition: "all 0.2s",
-                }}
+                className={`rounded-full px-4 py-2 text-xs font-medium transition-all duration-200 cursor-pointer ${
+                  symptoms.includes(s)
+                    ? "bg-primary/10 border-primary/30 border text-primary"
+                    : "bg-surface border border-border text-foreground-dim hover:border-border-bright"
+                }`}
               >
                 {s}
               </button>
@@ -167,34 +129,20 @@ export default function TriagePage() {
         </div>
 
         {/* Symptom textarea */}
-        <div
-          className={`card ${mounted ? "fade-up-delay-1" : ""}`}
-          style={{ padding: "1.5rem", marginBottom: "1.5rem" }}
-        >
+        <div className={`card mb-6 ${mounted ? "fade-up-delay-1" : ""} p-6`}>
           <span className="label">Describe your symptoms *</span>
           <textarea
-            className="input-field"
+            className="input-field resize-vertical"
             value={symptoms}
             onChange={(e) => setSymptoms(e.target.value)}
             placeholder="e.g. I have a severe headache and fever since yesterday, along with neck stiffness and sensitivity to light..."
             rows={5}
-            style={{ resize: "vertical", lineHeight: 1.6 }}
           />
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "flex-end",
-              marginTop: "0.5rem",
-            }}
-          >
+          <div className="mt-2 flex justify-end">
             <span
-              style={{
-                fontSize: "0.75rem",
-                color:
-                  symptoms.length > 20
-                    ? "var(--primary)"
-                    : "var(--foreground-muted)",
-              }}
+              className={`text-xs font-medium ${
+                symptoms.length > 20 ? "text-primary" : "text-foreground-muted"
+              }`}
             >
               {symptoms.length} chars{" "}
               {symptoms.length < 20 && symptoms.length > 0
@@ -205,18 +153,8 @@ export default function TriagePage() {
         </div>
 
         {/* Patient info */}
-        <div
-          className={`card ${mounted ? "fade-up-delay-2" : ""}`}
-          style={{ padding: "1.5rem", marginBottom: "1.5rem" }}
-        >
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: "1fr 1fr",
-              gap: "1rem",
-              marginBottom: "1rem",
-            }}
-          >
+        <div className={`card mb-6 ${mounted ? "fade-up-delay-2" : ""} p-6`}>
+          <div className="mb-4 grid grid-cols-2 gap-4">
             <div>
               <span className="label">Age (optional)</span>
               <input
@@ -232,10 +170,9 @@ export default function TriagePage() {
             <div>
               <span className="label">Gender (optional)</span>
               <select
-                className="input-field"
+                className="input-field appearance-none cursor-pointer"
                 value={gender}
                 onChange={(e) => setGender(e.target.value)}
-                style={{ appearance: "none", cursor: "pointer" }}
               >
                 <option value="">Select</option>
                 <option value="male">Male</option>
@@ -247,10 +184,9 @@ export default function TriagePage() {
           <div>
             <span className="label">Your language</span>
             <select
-              className="input-field"
+              className="input-field appearance-none cursor-pointer w-full"
               value={language}
               onChange={(e) => setLanguage(e.target.value)}
-              style={{ appearance: "none", cursor: "pointer" }}
             >
               {LANGUAGES.map((l) => (
                 <option key={l.code} value={l.code}>
@@ -262,40 +198,19 @@ export default function TriagePage() {
         </div>
 
         {/* Location */}
-        <div
-          className={`card ${mounted ? "fade-up-delay-3" : ""}`}
-          style={{ padding: "1.5rem", marginBottom: "1.5rem" }}
-        >
+        <div className={`card mb-6 ${mounted ? "fade-up-delay-3" : ""} p-6`}>
           <span className="label">Your location *</span>
-          <p
-            style={{
-              color: "var(--foreground-dim)",
-              fontSize: "0.9rem",
-              marginBottom: "1rem",
-            }}
-          >
+          <p className="mb-4 text-sm text-foreground-dim">
             Required to find hospitals near you.
           </p>
           <button
             onClick={getLocation}
             disabled={locStatus === "loading" || locStatus === "got"}
-            className={locStatus === "got" ? "" : "btn-primary"}
-            style={
+            className={`flex items-center gap-2 rounded-lg px-4 py-3 font-medium transition-all ${
               locStatus === "got"
-                ? {
-                    background: "rgba(34,197,94,0.1)",
-                    border: "1px solid rgba(34,197,94,0.3)",
-                    color: "#22c55e",
-                    padding: "0.75rem 1.5rem",
-                    borderRadius: "8px",
-                    cursor: "default",
-                    display: "flex",
-                    alignItems: "center",
-                    gap: "0.5rem",
-                    fontWeight: 600,
-                  }
-                : { display: "flex", alignItems: "center", gap: "0.5rem" }
-            }
+                ? "cursor-default border border-severity-low/30 bg-severity-low/10 text-severity-low"
+                : "btn-primary"
+            }`}
           >
             {locStatus === "loading" && <div className="spinner" />}
             {locStatus === "got" && "✓"}
@@ -307,13 +222,7 @@ export default function TriagePage() {
             {locStatus === "error" && "Retry Location"}
           </button>
           {locStatus === "error" && (
-            <p
-              style={{
-                color: "var(--severity-high)",
-                fontSize: "0.85rem",
-                marginTop: "0.5rem",
-              }}
-            >
+            <p className="mt-2 text-xs text-severity-high">
               Could not get location. Please enable location permissions and try
               again.
             </p>
@@ -322,17 +231,7 @@ export default function TriagePage() {
 
         {/* Error */}
         {error && (
-          <div
-            style={{
-              background: "rgba(239,68,68,0.08)",
-              border: "1px solid rgba(239,68,68,0.25)",
-              borderRadius: "8px",
-              padding: "0.875rem 1rem",
-              color: "var(--severity-emergency)",
-              fontSize: "0.9rem",
-              marginBottom: "1.5rem",
-            }}
-          >
+          <div className="mb-6 rounded-lg border border-destructive/25 bg-destructive/8 px-4 py-3.5 text-sm text-destructive">
             ⚠ {error}
           </div>
         )}
@@ -341,13 +240,7 @@ export default function TriagePage() {
         <button
           onClick={handleSubmit}
           disabled={loading}
-          className="btn-primary"
-          style={{
-            width: "100%",
-            justifyContent: "center",
-            fontSize: "1.05rem",
-            padding: "1rem",
-          }}
+          className="btn-primary w-full justify-center text-base font-semibold py-3"
         >
           {loading ? (
             <>
@@ -359,14 +252,7 @@ export default function TriagePage() {
           )}
         </button>
 
-        <p
-          style={{
-            textAlign: "center",
-            color: "var(--foreground-muted)",
-            fontSize: "0.8rem",
-            marginTop: "1rem",
-          }}
-        >
+        <p className="mt-3 text-center text-xs text-foreground-muted">
           🔒 Your data is private and not shared with third parties
         </p>
       </div>

@@ -13,3 +13,4 @@ psycopg2-binary
 asyncpg
 langchain
 langchain-google-genai
+python-multipart

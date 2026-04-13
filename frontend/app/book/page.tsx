@@ -142,26 +142,12 @@ export default function BookPage() {
 
   if (!hospital) {
     return (
-      <div
-        style={{
-          minHeight: "100vh",
-          padding: "2rem",
-          background: "var(--background)",
-        }}
-      >
-        <div
-          style={{ maxWidth: "600px", margin: "0 auto", textAlign: "center" }}
-        >
-          <h1
-            style={{
-              fontSize: "2rem",
-              marginBottom: "1rem",
-              color: "var(--foreground)",
-            }}
-          >
+      <div className="min-h-screen bg-background px-8 py-8">
+        <div className="mx-auto max-w-md text-center">
+          <h1 className="text-3xl text-foreground mb-4">
             No Hospital Selected
           </h1>
-          <p style={{ color: "var(--foreground-dim)", marginBottom: "2rem" }}>
+          <p className="text-foreground-dim mb-8">
             Please select a hospital from the results page first.
           </p>
           <Link href="/triage" className="btn-primary">
@@ -177,102 +163,41 @@ export default function BookPage() {
   const maxTime = "20:00";
 
   return (
-    <div
-      style={{
-        minHeight: "100vh",
-        padding: "2rem",
-        background: "var(--background)",
-      }}
-    >
-      <div style={{ maxWidth: "800px", margin: "0 auto" }}>
-        <div style={{ marginBottom: "2rem" }}>
-          <Link
-            href="/results"
-            style={{
-              color: "var(--primary)",
-              textDecoration: "none",
-              fontSize: "0.9rem",
-            }}
-          >
+    <div className="min-h-screen bg-background px-8 py-8">
+      <div className="mx-auto max-w-3xl">
+        <div className="mb-8">
+          <Link href="/results" className="text-primary no-underline text-sm">
             ← Back to Results
           </Link>
         </div>
 
-        <h1
-          style={{
-            fontSize: "2.5rem",
-            marginBottom: "0.5rem",
-            color: "var(--foreground)",
-            fontFamily: "var(--font-bebas)",
-          }}
-        >
+        <h1 className="text-4xl text-foreground font-bebas mb-1 tracking-wide">
           Book Appointment
         </h1>
 
-        <div
-          className="card"
-          style={{
-            padding: "1.5rem",
-            marginBottom: "2rem",
-            background: "var(--card)",
-            border: "1px solid var(--border)",
-          }}
-        >
-          <h3
-            style={{
-              fontSize: "1.25rem",
-              marginBottom: "0.5rem",
-              color: "var(--primary)",
-            }}
-          >
+        <div className="card mb-8 p-6">
+          <h3 className="text-xl text-primary mb-1 font-semibold">
             {hospital.name}
           </h3>
-          <p
-            style={{
-              color: "var(--foreground-dim)",
-              fontSize: "0.9rem",
-              marginBottom: "0.5rem",
-            }}
-          >
+          <p className="text-foreground-dim text-sm mb-1">
             📍 {hospital.address}
           </p>
           {hospital.phone && (
-            <p style={{ color: "var(--foreground-dim)", fontSize: "0.9rem" }}>
-              📞 {hospital.phone}
-            </p>
+            <p className="text-foreground-dim text-sm">📞 {hospital.phone}</p>
           )}
         </div>
 
         <form onSubmit={handleSubmit}>
-          <div
-            className="card"
-            style={{
-              padding: "2rem",
-              background: "var(--card)",
-              border: "1px solid var(--border)",
-            }}
-          >
-            <h2
-              style={{
-                fontSize: "1.5rem",
-                marginBottom: "1.5rem",
-                color: "var(--foreground)",
-                fontFamily: "var(--font-bebas)",
-              }}
-            >
+          <div className="card p-8 mb-8">
+            <h2 className="text-2xl text-foreground font-bebas mb-6 tracking-wide">
               Patient Information
             </h2>
 
-            <div style={{ display: "grid", gap: "1.5rem" }}>
+            <div className="grid gap-6">
               <div>
                 <label
                   htmlFor="patientName"
-                  style={{
-                    display: "block",
-                    marginBottom: "0.5rem",
-                    color: "var(--foreground)",
-                    fontSize: "0.9rem",
-                  }}
+                  className="block text-foreground text-sm mb-2"
                 >
                   Full Name *
                 </label>
@@ -283,34 +208,15 @@ export default function BookPage() {
                   value={formData.patientName}
                   onChange={handleInputChange}
                   required
-                  style={{
-                    width: "100%",
-                    padding: "0.75rem",
-                    background: "var(--surface)",
-                    border: "1px solid var(--border)",
-                    borderRadius: "8px",
-                    color: "var(--foreground)",
-                    fontSize: "1rem",
-                  }}
+                  className="w-full px-3 py-2 bg-surface border border-border rounded-lg text-foreground text-base"
                 />
               </div>
 
-              <div
-                style={{
-                  display: "grid",
-                  gridTemplateColumns: "1fr 1fr",
-                  gap: "1rem",
-                }}
-              >
+              <div className="grid grid-cols-2 gap-4">
                 <div>
                   <label
                     htmlFor="patientAge"
-                    style={{
-                      display: "block",
-                      marginBottom: "0.5rem",
-                      color: "var(--foreground)",
-                      fontSize: "0.9rem",
-                    }}
+                    className="block text-foreground text-sm mb-2"
                   >
                     Age *
                   </label>
@@ -323,27 +229,14 @@ export default function BookPage() {
                     min="0"
                     max="120"
                     required
-                    style={{
-                      width: "100%",
-                      padding: "0.75rem",
-                      background: "var(--surface)",
-                      border: "1px solid var(--border)",
-                      borderRadius: "8px",
-                      color: "var(--foreground)",
-                      fontSize: "1rem",
-                    }}
+                    className="w-full px-3 py-2 bg-surface border border-border rounded-lg text-foreground text-base"
                   />
                 </div>
 
                 <div>
                   <label
                     htmlFor="patientGender"
-                    style={{
-                      display: "block",
-                      marginBottom: "0.5rem",
-                      color: "var(--foreground)",
-                      fontSize: "0.9rem",
-                    }}
+                    className="block text-foreground text-sm mb-2"
                   >
                     Gender *
                   </label>
@@ -353,15 +246,7 @@ export default function BookPage() {
                     value={formData.patientGender}
                     onChange={handleInputChange}
                     required
-                    style={{
-                      width: "100%",
-                      padding: "0.75rem",
-                      background: "var(--surface)",
-                      border: "1px solid var(--border)",
-                      borderRadius: "8px",
-                      color: "var(--foreground)",
-                      fontSize: "1rem",
-                    }}
+                    className="w-full px-3 py-2 bg-surface border border-border rounded-lg text-foreground text-base"
                   >
                     <option value="male">Male</option>
                     <option value="female">Female</option>
@@ -370,22 +255,11 @@ export default function BookPage() {
                 </div>
               </div>
 
-              <div
-                style={{
-                  display: "grid",
-                  gridTemplateColumns: "1fr 1fr",
-                  gap: "1rem",
-                }}
-              >
+              <div className="grid grid-cols-2 gap-4">
                 <div>
                   <label
                     htmlFor="patientBloodType"
-                    style={{
-                      display: "block",
-                      marginBottom: "0.5rem",
-                      color: "var(--foreground)",
-                      fontSize: "0.9rem",
-                    }}
+                    className="block text-foreground text-sm mb-2"
                   >
                     Blood Type
                   </label>
@@ -396,27 +270,14 @@ export default function BookPage() {
                     value={formData.patientBloodType}
                     onChange={handleInputChange}
                     placeholder="e.g., A+, O-"
-                    style={{
-                      width: "100%",
-                      padding: "0.75rem",
-                      background: "var(--surface)",
-                      border: "1px solid var(--border)",
-                      borderRadius: "8px",
-                      color: "var(--foreground)",
-                      fontSize: "1rem",
-                    }}
+                    className="w-full px-3 py-2 bg-surface border border-border rounded-lg text-foreground text-base"
                   />
                 </div>
 
                 <div>
                   <label
                     htmlFor="patientAllergies"
-                    style={{
-                      display: "block",
-                      marginBottom: "0.5rem",
-                      color: "var(--foreground)",
-                      fontSize: "0.9rem",
-                    }}
+                    className="block text-foreground text-sm mb-2"
                   >
                     Allergies
                   </label>
@@ -427,42 +288,21 @@ export default function BookPage() {
                     value={formData.patientAllergies}
                     onChange={handleInputChange}
                     placeholder="e.g., Penicillin"
-                    style={{
-                      width: "100%",
-                      padding: "0.75rem",
-                      background: "var(--surface)",
-                      border: "1px solid var(--border)",
-                      borderRadius: "8px",
-                      color: "var(--foreground)",
-                      fontSize: "1rem",
-                    }}
+                    className="w-full px-3 py-2 bg-surface border border-border rounded-lg text-foreground text-base"
                   />
                 </div>
               </div>
             </div>
 
-            <h2
-              style={{
-                fontSize: "1.5rem",
-                marginTop: "2rem",
-                marginBottom: "1.5rem",
-                color: "var(--foreground)",
-                fontFamily: "var(--font-bebas)",
-              }}
-            >
+            <h2 className="text-2xl text-foreground font-bebas mt-8 mb-6 tracking-wide">
               Emergency Contact
             </h2>
 
-            <div style={{ display: "grid", gap: "1.5rem" }}>
+            <div className="grid gap-6">
               <div>
                 <label
                   htmlFor="emergencyContactName"
-                  style={{
-                    display: "block",
-                    marginBottom: "0.5rem",
-                    color: "var(--foreground)",
-                    fontSize: "0.9rem",
-                  }}
+                  className="block text-foreground text-sm mb-2"
                 >
                   Contact Name *
                 </label>
@@ -473,34 +313,15 @@ export default function BookPage() {
                   value={formData.emergencyContactName}
                   onChange={handleInputChange}
                   required
-                  style={{
-                    width: "100%",
-                    padding: "0.75rem",
-                    background: "var(--surface)",
-                    border: "1px solid var(--border)",
-                    borderRadius: "8px",
-                    color: "var(--foreground)",
-                    fontSize: "1rem",
-                  }}
+                  className="w-full px-3 py-2 bg-surface border border-border rounded-lg text-foreground text-base"
                 />
               </div>
 
-              <div
-                style={{
-                  display: "grid",
-                  gridTemplateColumns: "1fr 1fr",
-                  gap: "1rem",
-                }}
-              >
+              <div className="grid grid-cols-2 gap-4">
                 <div>
                   <label
                     htmlFor="emergencyContactPhone"
-                    style={{
-                      display: "block",
-                      marginBottom: "0.5rem",
-                      color: "var(--foreground)",
-                      fontSize: "0.9rem",
-                    }}
+                    className="block text-foreground text-sm mb-2"
                   >
                     Phone Number *
                   </label>
@@ -511,27 +332,14 @@ export default function BookPage() {
                     value={formData.emergencyContactPhone}
                     onChange={handleInputChange}
                     required
-                    style={{
-                      width: "100%",
-                      padding: "0.75rem",
-                      background: "var(--surface)",
-                      border: "1px solid var(--border)",
-                      borderRadius: "8px",
-                      color: "var(--foreground)",
-                      fontSize: "1rem",
-                    }}
+                    className="w-full px-3 py-2 bg-surface border border-border rounded-lg text-foreground text-base"
                   />
                 </div>
 
                 <div>
                   <label
                     htmlFor="emergencyContactEmail"
-                    style={{
-                      display: "block",
-                      marginBottom: "0.5rem",
-                      color: "var(--foreground)",
-                      fontSize: "0.9rem",
-                    }}
+                    className="block text-foreground text-sm mb-2"
                   >
                     Email
                   </label>
@@ -541,49 +349,21 @@ export default function BookPage() {
                     name="emergencyContactEmail"
                     value={formData.emergencyContactEmail}
                     onChange={handleInputChange}
-                    style={{
-                      width: "100%",
-                      padding: "0.75rem",
-                      background: "var(--surface)",
-                      border: "1px solid var(--border)",
-                      borderRadius: "8px",
-                      color: "var(--foreground)",
-                      fontSize: "1rem",
-                    }}
+                    className="w-full px-3 py-2 bg-surface border border-border rounded-lg text-foreground text-base"
                   />
                 </div>
               </div>
             </div>
 
-            <h2
-              style={{
-                fontSize: "1.5rem",
-                marginTop: "2rem",
-                marginBottom: "1.5rem",
-                color: "var(--foreground)",
-                fontFamily: "var(--font-bebas)",
-              }}
-            >
+            <h2 className="text-2xl text-foreground font-bebas mt-8 mb-6 tracking-wide">
               Appointment Details
             </h2>
 
-            <div
-              style={{
-                display: "grid",
-                gridTemplateColumns: "1fr 1fr",
-                gap: "1rem",
-                marginBottom: "1.5rem",
-              }}
-            >
+            <div className="grid grid-cols-2 gap-4 mb-6">
               <div>
                 <label
                   htmlFor="appointmentDate"
-                  style={{
-                    display: "block",
-                    marginBottom: "0.5rem",
-                    color: "var(--foreground)",
-                    fontSize: "0.9rem",
-                  }}
+                  className="block text-foreground text-sm mb-2"
                 >
                   Date *
                 </label>
@@ -595,27 +375,14 @@ export default function BookPage() {
                   onChange={handleInputChange}
                   min={todayDate}
                   required
-                  style={{
-                    width: "100%",
-                    padding: "0.75rem",
-                    background: "var(--surface)",
-                    border: "1px solid var(--border)",
-                    borderRadius: "8px",
-                    color: "var(--foreground)",
-                    fontSize: "1rem",
-                  }}
+                  className="w-full px-3 py-2 bg-surface border border-border rounded-lg text-foreground text-base"
                 />
               </div>
 
               <div>
                 <label
                   htmlFor="appointmentTime"
-                  style={{
-                    display: "block",
-                    marginBottom: "0.5rem",
-                    color: "var(--foreground)",
-                    fontSize: "0.9rem",
-                  }}
+                  className="block text-foreground text-sm mb-2"
                 >
                   Time *
                 </label>
@@ -628,31 +395,17 @@ export default function BookPage() {
                   min={minTime}
                   max={maxTime}
                   required
-                  style={{
-                    width: "100%",
-                    padding: "0.75rem",
-                    background: "var(--surface)",
-                    border: "1px solid var(--border)",
-                    borderRadius: "8px",
-                    color: "var(--foreground)",
-                    fontSize: "1rem",
-                  }}
+                  className="w-full px-3 py-2 bg-surface border border-border rounded-lg text-foreground text-base"
                 />
               </div>
             </div>
 
             <div
-              style={{
-                padding: "1rem",
-                background: formData.ambulanceRequested
-                  ? "rgba(239,68,68,0.1)"
-                  : "rgba(0,212,168,0.05)",
-                border: `1px solid ${formData.ambulanceRequested ? "rgba(239,68,68,0.3)" : "var(--border)"}`,
-                borderRadius: "8px",
-                display: "flex",
-                alignItems: "center",
-                gap: "1rem",
-              }}
+              className={`p-4 rounded-lg border flex items-center gap-4 ${
+                formData.ambulanceRequested
+                  ? "bg-destructive/10 border-destructive/30"
+                  : "bg-primary/5 border-border"
+              }`}
             >
               <input
                 type="checkbox"
@@ -660,27 +413,16 @@ export default function BookPage() {
                 name="ambulanceRequested"
                 checked={formData.ambulanceRequested}
                 onChange={handleInputChange}
-                style={{ width: "20px", height: "20px", cursor: "pointer" }}
+                className="w-5 h-5 cursor-pointer"
               />
               <label
                 htmlFor="ambulanceRequested"
-                style={{
-                  color: "var(--foreground)",
-                  fontSize: "1rem",
-                  cursor: "pointer",
-                }}
+                className="text-foreground text-base cursor-pointer flex-1"
               >
                 {formData.ambulanceRequested ? "🚨 " : ""}Request Ambulance
                 Transportation
                 {formData.ambulanceRequested && (
-                  <span
-                    style={{
-                      display: "block",
-                      fontSize: "0.85rem",
-                      color: "var(--foreground-dim)",
-                      marginTop: "0.25rem",
-                    }}
-                  >
+                  <span className="block text-xs text-foreground-dim mt-1">
                     Additional $300 fee applies
                   </span>
                 )}
@@ -688,16 +430,7 @@ export default function BookPage() {
             </div>
 
             {error && (
-              <div
-                style={{
-                  marginTop: "1.5rem",
-                  padding: "1rem",
-                  background: "rgba(239,68,68,0.1)",
-                  border: "1px solid rgba(239,68,68,0.3)",
-                  borderRadius: "8px",
-                  color: "#ef4444",
-                }}
-              >
+              <div className="mt-6 p-4 bg-destructive/10 border border-destructive/30 rounded-lg text-destructive">
                 {error}
               </div>
             )}
@@ -705,14 +438,8 @@ export default function BookPage() {
             <button
               type="submit"
               disabled={loading}
-              className="btn-primary"
+              className="btn-primary w-full mt-8 text-lg font-bebas tracking-wide"
               style={{
-                width: "100%",
-                marginTop: "2rem",
-                padding: "1rem",
-                fontSize: "1.1rem",
-                fontFamily: "var(--font-bebas)",
-                letterSpacing: "0.05em",
                 opacity: loading ? 0.6 : 1,
                 cursor: loading ? "not-allowed" : "pointer",
               }}
